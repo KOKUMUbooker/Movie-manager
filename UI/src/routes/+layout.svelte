@@ -8,8 +8,6 @@
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
-<!-- <div class="mb-4"> -->
-	<Header/>
-<!-- </div> -->
+<Header/>
 <ModeWatcher />
 {@render children()}

@@ -10,10 +10,12 @@
 <div class="fixed top-0 bg-background/60 w-full">
     <div class="flex flex-row justify-between items-center py-4 mx-2">
         <div class="flex flex-row gap-2 justify-between items-center">
-            <div class="bg-primary">
+            <div class="bg-primary p-2 rounded-md">
                 <Film/>
             </div>
-            Movie Manager
+            <div class="text-md font-bold">
+                Movie Manager
+            </div>
         </div>
         
         <div>
