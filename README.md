@@ -22,13 +22,13 @@ A .NET 8 Web API for managing movies with CRUD operations, PostgreSQL, and Minim
 
 1. **Clone and setup**
 ```bash
-git clone <your-repo-url>
+git clone <repo-url>
 cd Movie-manager
 ```
 
 2. **Start PostgreSQL**
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 Database: `moviemanager` | User: `admin` | Password: `secret` | Port: `5480`
 
@@ -49,7 +49,7 @@ dotnet run
 
 API runs on `https://localhost:7189`
 
-## 📖 API Documentation
+## API Documentation
 
 Once running, explore the API:
 - **Swagger UI**: `https://localhost:7189/swagger`
@@ -94,7 +94,9 @@ MovieManager/
 
 Connection string in `appsettings.json`:
 ```json
-"DefaultConnection": "Host=localhost;Port=5480;Database=moviemanager;Username=admin;Password=secret"
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5480;Database=moviemanager;Username=admin;Password=secret;"
+  }
 ```
 
 ## Troubleshooting
