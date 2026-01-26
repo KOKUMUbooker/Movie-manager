@@ -9,12 +9,14 @@
 
 <div class="fixed top-0 z-10 flex h-18 w-full items-center bg-background/80">
 	<div class="flex w-full flex-row items-center justify-between px-6">
-		<div class="flex flex-row items-center justify-between gap-2">
-			<div class="rounded-md bg-primary/80 p-2">
-				<Film />
+		<a href="/">
+			<div class="flex flex-row items-center justify-between gap-2">
+				<div class="rounded-md bg-primary/80 p-2">
+					<Film />
+				</div>
+				<div class="text-lg font-bold">Movie manager</div>
 			</div>
-			<div class="text-lg font-bold">Movie manager</div>
-		</div>
+		</a>
 
 		<div>
 			<Button onclick={toggleMode} variant="outline" size="icon">

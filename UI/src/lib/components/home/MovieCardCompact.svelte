@@ -10,13 +10,14 @@
 		movie: Movie;
 		variant?: 'grid' | 'list';
 	}
-	const { movie, variant = 'grid' }: MovieCompactProps = $props();
+	let { movie, variant = 'grid' }: MovieCompactProps = $props();
 
 	const formatDuration = (minutes: number): string => {
 		const hours = Math.floor(minutes / 60);
 		const mins = minutes % 60;
 		return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
 	};
+	console.log('movie : ', movie);
 </script>
 
 {#if variant === 'grid'}

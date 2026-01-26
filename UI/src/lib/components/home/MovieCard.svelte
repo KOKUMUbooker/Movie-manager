@@ -1,20 +1,21 @@
 <!-- src/lib/components/movies/MovieCard.svelte -->
 <script lang="ts">
-	import type { Movie } from '../../../types/movie';
-	import { Button } from '../ui/button';
-	import { Badge } from '../ui/badge';
-	import { Card, CardContent, CardFooter } from '../ui/card';
-	import Star from '@lucide/svelte/icons/star';
-	import Clock from '@lucide/svelte/icons/clock';
 	import Calendar from '@lucide/svelte/icons/calendar-range';
-	import User from '@lucide/svelte/icons/user';
+	import Clock from '@lucide/svelte/icons/clock';
 	import ShieldCheck from '@lucide/svelte/icons/shield-check';
+	import Star from '@lucide/svelte/icons/star';
+	import User from '@lucide/svelte/icons/user';
+	import { Badge } from '../ui/badge';
+	import { Button } from '../ui/button';
+	import { Card, CardContent, CardFooter } from '../ui/card';
+	import type { Movie } from '../../../types';
 
 	let showActions: boolean = true;
 	let compact: boolean = false;
 
-	let movie = $props();
+	const { movie }: { movie: Movie } = $props();
 	let isHovered = false;
+	console.log('movie : ', movie);
 
 	// Format duration to hours and minutes
 	const formatDuration = (minutes: number): string => {
@@ -25,11 +26,13 @@
 
 	// Format date to readable string
 	const formatDate = (date: Date): string => {
-		return date.toLocaleDateString('en-US', {
-			year: 'numeric',
-			month: 'short',
-			day: 'numeric'
-		});
+		return (
+			date?.toLocaleDateString('en-US', {
+				year: 'numeric',
+				month: 'short',
+				day: 'numeric'
+			}) || ''
+		);
 	};
 
 	// Get rating color based on score
@@ -107,7 +110,7 @@
 			<div>
 				<h3 class="line-clamp-1 text-lg leading-tight font-semibold">{movie.Title}</h3>
 				<p class="text-sm text-muted-foreground">
-					{movie.ReleaseDate.getFullYear()} • {movie.Genre}
+					{movie.ReleaseDate?.getFullYear()} • {movie.Genre}
 				</p>
 			</div>
 		</div>
@@ -117,7 +120,7 @@
 			<div class="flex items-center gap-1">
 				<div class="flex items-center">
 					<Star size={14} class={getRatingColor(movie.Rating) + ' mr-1 fill-current'} />
-					<span class="font-medium">{movie.Rating.toFixed(1)}</span>
+					<span class="font-medium">{movie.Rating?.toFixed(1)}</span>
 					<span class="ml-1 text-muted-foreground">/10</span>
 				</div>
 			</div>

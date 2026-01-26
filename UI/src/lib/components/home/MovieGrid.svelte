@@ -7,6 +7,7 @@
 	import { Skeleton } from '../ui/skeleton';
 	import Grid2x2 from '@lucide/svelte/icons/grid-2x2';
 	import List from '@lucide/svelte/icons/list';
+	import { fromTheme } from 'tailwind-merge';
 
 	interface MovieGridInterface {
 		movies: Movie[];
@@ -22,6 +23,8 @@
 		columns = 4,
 		emptyMessage = 'No movies found'
 	}: MovieGridInterface = $props();
+	// console.log('Movie grid movies : ', movies);
+	console.log('viewMode : ', viewMode);
 
 	const gridColumns: { [key: number]: string } = {
 		1: 'grid-cols-1',

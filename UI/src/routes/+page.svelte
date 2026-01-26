@@ -32,7 +32,7 @@
 	/>
 </svelte:head>
 
-<main class="mt-18 min-h-screen bg-background text-foreground">
+<main class="min-h-screen bg-background text-foreground">
 	<!-- Hero Section -->
 	<div class="mb-4 h-[115vh]">
 		<Carousel.Root
