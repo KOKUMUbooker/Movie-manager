@@ -20,7 +20,7 @@
 		avgRating: 0,
 		recentAdditions: 0
 	};
-	let featuredMovies: Movie[] = dummyMovies.slice(1, 4);
+	let featuredMovies: Movie[] = [dummyMovies[4], dummyMovies[15], dummyMovies[7]];
 	const movieUrls = [hereditary, rec, evilDead, it, smile, frankenstein];
 </script>
 
