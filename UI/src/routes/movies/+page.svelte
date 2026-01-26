@@ -160,21 +160,23 @@
 									<SheetTitle>Filters</SheetTitle>
 									<SheetDescription>Refine your movie search</SheetDescription>
 								</SheetHeader>
-								<FiltersContent
-									{clearFilters}
-									{filteredMovies}
-									{handleSearch}
-									{isFilterOpen}
-									{ratingRange}
-									{searchQuery}
-									{selectedGenres}
-									{sortBy}
-									{sortOrder}
-									{toggleGenre}
-									{toggleSortOrder}
-									{updateFilters}
-									{yearRange}
-								/>
+								<div class="pt-2 pb-6">
+									<FiltersContent
+										{clearFilters}
+										{filteredMovies}
+										{handleSearch}
+										{isFilterOpen}
+										{ratingRange}
+										{searchQuery}
+										{selectedGenres}
+										{sortBy}
+										{sortOrder}
+										{toggleGenre}
+										{toggleSortOrder}
+										{updateFilters}
+										{yearRange}
+									/>
+								</div>
 							</SheetContent>
 						</Sheet>
 
