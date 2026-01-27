@@ -28,7 +28,7 @@ export const adminDashboardRoutes: NavItem[] = [
 	// Single page containing: Overview stats, Quick Actions panel, System Health monitor, Active Alerts
 	{
 		title: 'Admin Dashboard',
-		url: '/dashboard/admin',
+		url: '/dashboard/admin/home',
 		icon: Shield,
 	},
 
@@ -82,7 +82,7 @@ export const userDashboardRoutes: NavItem[] = [
 	// Single page containing: Overview, Personal stats, Recent activity, Notifications
 	{
 		title: 'My Dashboard',
-		url: '/dashboard',
+		url: '/dashboard/home',
 		icon: LayoutDashboard,
 
 	},
@@ -105,13 +105,13 @@ export const userDashboardRoutes: NavItem[] = [
 
 	},
 
-	// 4. SOCIAL & COMMUNITY TAB
-	// Single page containing: Following, Followers, Community feed, Messages
-	{
-		title: 'Social',
-		url: '/dashboard/social',
-		icon: Users,
-	},
+	// // 4. SOCIAL & COMMUNITY TAB
+	// // Single page containing: Following, Followers, Community feed, Messages
+	// {
+	// 	title: 'Social',
+	// 	url: '/dashboard/social',
+	// 	icon: Users,
+	// },
 
 	// 5. ACCOUNT SETTINGS TAB
 	// Single page containing: Profile, Account settings, Notifications, Privacy, Preferences
