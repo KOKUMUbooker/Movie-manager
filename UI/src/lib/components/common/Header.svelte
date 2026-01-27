@@ -1,29 +1,280 @@
+<!-- src/lib/components/layout/Header.svelte -->
 <script lang="ts">
 	import SunIcon from '@lucide/svelte/icons/sun';
 	import MoonIcon from '@lucide/svelte/icons/moon';
-
+	import Film from '@lucide/svelte/icons/film';
+	import { Home, LogIn, LayoutDashboard, User } from '@lucide/svelte';
+	
 	import { toggleMode } from 'mode-watcher';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import Film from '@lucide/svelte/icons/film';
+	import {page} from "$app/stores"
+	
+	// Authentication state (in real app, this would come from a store)
+	export let isAuthenticated = false;
+	export let user: { name: string; email: string } | null = null;
+	
+	// Navigation items
+	const navItems = [
+		{ name: 'Home', href: '/', icon: Home },
+		{ name: 'Movies', href: '/movies', icon: Film }
+	];
+	
+	// Mobile menu state
+	let mobileMenuOpen = false;
 </script>
 
-<div class="fixed top-0 z-10 flex h-18 w-full items-center bg-background/80">
-	<div class="flex w-full flex-row items-center justify-between px-6">
-		<a href="/">
-			<div class="flex flex-row items-center justify-between gap-2">
-				<div class="rounded-md bg-primary/80 p-2">
-					<Film />
-				</div>
-				<div class="text-lg font-bold">Movie manager</div>
+<header class="fixed top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-sm">
+	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+		<div class="flex h-16 items-center justify-between">
+			<!-- Logo -->
+			<div class="flex items-center">
+				<a href="/" class="flex items-center gap-3">
+					<div class="rounded-lg bg-primary/10 p-2">
+						<Film class="h-6 w-6 text-primary" />
+					</div>
+					<span class="text-xl font-bold tracking-tight">Movie Manager</span>
+				</a>
+				
+				<!-- Desktop Navigation -->
+				<nav class="hidden md:ml-10 md:flex md:items-center md:space-x-6">
+					<!-- {#each navItems as item}
+						<a
+							href={item.href}
+							class="text-sm font-medium transition-colors hover:text-primary data-[current]:text-primary"
+							data-current={$page.url.pathname === item.href}
+						>
+							<div class="flex items-center gap-2">
+								{#if item.icon}
+									<svelte:component this={item.icon} class="h-4 w-4" />
+								{/if}
+								<span>{item.name}</span>
+							</div>
+						</a>
+					{/each} -->
+				</nav>
 			</div>
-		</a>
+			
+			<!-- Right side: Auth + Theme Toggle -->
+			<div class="flex items-center gap-4">
+				<nav class="hidden md:ml-10 md:flex md:items-center md:space-x-6">
 
-		<div>
-			<Button onclick={toggleMode} variant="outline" size="icon">
-				<SunIcon class="scale-100 rotate-0 !transition-all dark:scale-0 dark:-rotate-90" />
-				<MoonIcon class="absolute scale-0 rotate-90 !transition-all dark:scale-100 dark:rotate-0" />
-				<span class="sr-only">Toggle theme</span>
-			</Button>
+					{#each navItems as item}
+							<a
+								href={item.href}
+								class="text-sm font-medium transition-colors hover:text-primary data-[current]:text-primary"
+								data-current={$page.url.pathname === item.href}
+							>
+								<div class="flex items-center gap-2">
+									{#if item.icon}
+										<svelte:component this={item.icon} class="h-4 w-4" />
+									{/if}
+									<span>{item.name}</span>
+								</div>
+							</a>
+						{/each}
+				</nav>
+				
+				
+				<!-- Authentication Section -->
+				<div class="flex items-center gap-2">
+					{#if isAuthenticated && user}
+						<!-- Authenticated User -->
+						<div class="flex items-center gap-3">
+							<!-- User Profile Dropdown (simplified) -->
+							<div class="hidden md:flex items-center gap-2">
+								<div class="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-accent transition-colors">
+									<div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
+										<User class="h-4 w-4 text-primary" />
+									</div>
+									<span class="text-sm font-medium">{user.name}</span>
+								</div>
+								
+								<!-- Dashboard Button -->
+								<a href="/dashboard">
+									<Button variant="outline" size="sm" class="gap-2">
+										<LayoutDashboard class="h-4 w-4" />
+										Dashboard
+									</Button>
+								</a>
+								
+								<!-- Logout Button -->
+								<Button variant="ghost" size="sm" onclick={() => {
+									// Handle logout
+									isAuthenticated = false;
+									user = null;
+								}}>
+									Logout
+								</Button>
+							</div>
+							
+							<!-- Mobile: Just the dashboard button -->
+							<div class="md:hidden">
+								<a href="/dashboard">
+									<Button variant="outline" size="sm" class="gap-2">
+										<LayoutDashboard class="h-4 w-4" />
+									</Button>
+								</a>
+							</div>
+						</div>
+					{:else}
+						<!-- Not Authenticated -->
+						<a href="/login">
+							<Button variant="default" size="sm" class="gap-2">
+								<LogIn class="h-4 w-4" />
+								<span class="hidden sm:inline">Login</span>
+							</Button>
+						</a>
+						
+					{/if}
+				</div>
+
+				<!-- Mobile Menu Button -->
+				<button
+					type="button"
+					class="inline-flex items-center justify-center rounded-md p-2 text-foreground hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-primary md:hidden"
+					onclick={() => mobileMenuOpen = !mobileMenuOpen}
+					aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+				>
+					<svg
+						class="h-6 w-6"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						{#if mobileMenuOpen}
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+						{:else}
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+						{/if}
+					</svg>
+				</button>
+
+				<!-- Theme Toggle -->
+				<Button 
+					onclick={toggleMode} 
+					variant="ghost" 
+					size="icon" 
+					class="hidden sm:inline-flex"
+					aria-label="Toggle theme"
+				>
+					<SunIcon class="h-5 w-5 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+					<MoonIcon class="absolute h-5 w-5 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+				</Button>
+			</div>
 		</div>
+		
+		<!-- Mobile Menu -->
+		{#if mobileMenuOpen}
+			<div class="md:hidden">
+				<div class="space-y-1 border-t border-border px-2 pb-3 pt-4">
+					{#each navItems as item}
+						<a
+							href={item.href}
+							class="flex items-center gap-3 rounded-md px-3 py-2 text-base font-medium hover:bg-accent hover:text-accent-foreground data-[current]:bg-accent data-[current]:text-accent-foreground"
+							data-current={$page.url.pathname === item.href}
+							onclick={() => mobileMenuOpen = false}
+						>
+							{#if item.icon}
+								<svelte:component this={item.icon} class="h-5 w-5" />
+							{/if}
+							{item.name}
+						</a>
+					{/each}
+					
+					<!-- Mobile Theme Toggle -->
+					<button
+						onclick={() => {
+							toggleMode();
+							mobileMenuOpen = false;
+						}}
+						class="flex w-full items-center gap-3 rounded-md px-3 py-2 text-base font-medium hover:bg-accent hover:text-accent-foreground"
+					>
+						<SunIcon class="h-5 w-5 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+						<MoonIcon class="absolute h-5 w-5 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+						<span>Toggle Theme</span>
+					</button>
+					
+					{#if isAuthenticated && user}
+						<!-- Mobile Auth Options -->
+						<div class="border-t border-border pt-4">
+							<div class="flex items-center gap-3 px-3 py-2">
+								<div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+									<User class="h-5 w-5 text-primary" />
+								</div>
+								<div>
+									<p class="text-sm font-medium">{user.name}</p>
+									<p class="text-xs text-muted-foreground">{user.email}</p>
+								</div>
+							</div>
+							
+							<a
+								href="/dashboard"
+								class="flex items-center gap-3 rounded-md px-3 py-2 text-base font-medium hover:bg-accent hover:text-accent-foreground"
+								onclick={() => mobileMenuOpen = false}
+							>
+								<LayoutDashboard class="h-5 w-5" />
+								Dashboard
+							</a>
+							
+							<button
+								onclick={() => {
+									isAuthenticated = false;
+									user = null;
+									mobileMenuOpen = false;
+								}}
+								class="flex w-full items-center gap-3 rounded-md px-3 py-2 text-base font-medium hover:bg-destructive/10 hover:text-destructive"
+							>
+								<LogIn class="h-5 w-5 rotate-180" />
+								Logout
+							</button>
+						</div>
+					{:else}
+						<!-- Mobile Login/Signup -->
+						<div class="border-t border-border pt-4">
+							<a
+								href="/login"
+								class="mb-2 flex items-center gap-3 rounded-md px-3 py-2 text-base font-medium hover:bg-accent hover:text-accent-foreground"
+								onclick={() => mobileMenuOpen = false}
+							>
+								<LogIn class="h-5 w-5" />
+								Login
+							</a>
+							<a
+								href="/register"
+								class="flex items-center gap-3 rounded-md px-3 py-2 text-base font-medium hover:bg-accent hover:text-accent-foreground"
+								onclick={() => mobileMenuOpen = false}
+							>
+								<User class="h-5 w-5" />
+								Sign Up
+							</a>
+						</div>
+					{/if}
+				</div>
+			</div>
+		{/if}
 	</div>
-</div>
+</header>
+
+<style>
+	/* Active link indicator */
+	a[data-current="true"] {
+		position: relative;
+	}
+	
+	a[data-current="true"]:after {
+		content: '';
+		position: absolute;
+		bottom: -6px;
+		left: 0;
+		right: 0;
+		height: 2px;
+		background-color: hsl(var(--primary));
+		border-radius: 1px;
+	}
+	
+	@media (max-width: 768px) {
+		a[data-current="true"]:after {
+			display: none;
+		}
+	}
+</style>
