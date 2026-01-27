@@ -23,7 +23,7 @@
 	let mobileMenuOpen = false;
 </script>
 
-<header class="fixed top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-sm">
+<header class="fixed top-0 z-10 w-full border-b border-border bg-background/80 backdrop-blur-sm">
 	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="flex h-16 items-center justify-between">
 			<!-- Logo -->
@@ -34,24 +34,6 @@
 					</div>
 					<span class="text-xl font-bold tracking-tight">Movie Manager</span>
 				</a>
-				
-				<!-- Desktop Navigation -->
-				<nav class="hidden md:ml-10 md:flex md:items-center md:space-x-6">
-					<!-- {#each navItems as item}
-						<a
-							href={item.href}
-							class="text-sm font-medium transition-colors hover:text-primary data-[current]:text-primary"
-							data-current={$page.url.pathname === item.href}
-						>
-							<div class="flex items-center gap-2">
-								{#if item.icon}
-									<svelte:component this={item.icon} class="h-4 w-4" />
-								{/if}
-								<span>{item.name}</span>
-							</div>
-						</a>
-					{/each} -->
-				</nav>
 			</div>
 			
 			<!-- Right side: Auth + Theme Toggle -->
