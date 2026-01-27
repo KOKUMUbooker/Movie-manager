@@ -1,8 +1,17 @@
-<script lang="ts" module>
-	import BookOpenIcon from "@lucide/svelte/icons/book-open";
-	import BotIcon from "@lucide/svelte/icons/bot";
-	import Settings2Icon from "@lucide/svelte/icons/settings-2";
-	import SquareTerminalIcon from "@lucide/svelte/icons/square-terminal";
+<script lang="ts">
+	import * as Sidebar from "$lib/components/ui/sidebar/index.js";
+	import type { IconProps } from "@lucide/svelte";
+	import type { Component, ComponentProps } from "svelte";
+	import { adminDashboardRoutes } from "./dashboard-routes";
+	import NavMain from "./nav-main.svelte";
+	import NavUser from "./nav-user.svelte";
+			
+	// interface NavItem {
+	// 	title: string;
+	// 	url: string;
+	// 	icon: Component<IconProps, {}, "">,
+	// 	isActive: boolean,
+	// }
 
 	const data = {
 		user: {
@@ -10,42 +19,9 @@
 			email: "m@example.com",
 			avatar: "/avatars/shadcn.jpg",
 		},
-		navMain: [
-			{
-				title: "Playground",
-				url: "#",
-				icon: SquareTerminalIcon,
-				isActive: true,
-			},
-			{
-				title: "Models",
-				url: "#",
-				icon: BotIcon,
-				
-			},
-			{
-				title: "Documentation",
-				url: "#",
-				icon: BookOpenIcon,
-			
-			},
-			{
-				title: "Settings",
-				url: "#",
-				icon: Settings2Icon,
-				
-			},
-		],
+		navMain: [...adminDashboardRoutes],
 	
 	};
-</script>
-
-<script lang="ts">
-	import * as Sidebar from "$lib/components/ui/sidebar/index.js";
-	import type { ComponentProps } from "svelte";
-	import NavMain from "./nav-main.svelte";
-	import NavUser from "./nav-user.svelte";
-
 	let { ref = $bindable(null), ...restProps }: ComponentProps<typeof Sidebar.Root> = $props();
 </script>
 
