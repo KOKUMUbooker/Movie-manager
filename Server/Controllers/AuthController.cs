@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace MovieManager.Controllers;
 
 [ApiController]
-[Route("/api/auth/[controller]")]
+[Route("/api/auth/")]
 public class AuthController:ControllerBase
 {
     [HttpPost("login")]
