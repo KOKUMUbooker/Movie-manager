@@ -3,6 +3,7 @@ using MovieManager.Models;
 using MovieManager.DTOs;
 using Microsoft.EntityFrameworkCore;
 using MovieManager.Utils;
+using MovieManager.Services;
 
 namespace MovieManager.Controllers;
 
@@ -11,37 +12,35 @@ namespace MovieManager.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly MovieAppDbContext _context;
+    private readonly IUserService _userService;
 
-    public AuthController(MovieAppDbContext context)
+    public AuthController(MovieAppDbContext context, IUserService userService)
     {
         _context = context;
+        _userService = userService;
     }
 
     [HttpPost("sign-up")]
     public async Task<IActionResult> SignUp([FromBody] RegisterUserDto userDetails)
     {
-          // Check if the email already exists
         var userExists = await _context.Users.AnyAsync(u => u.Email == userDetails.Email);
         if (userExists) return BadRequest("Email is already in use.");
-
-        // Create password hash and salt
-        PasswordHasher.CreatePasswordHash(userDetails.Password, out byte[] passwordHash, out byte[] passwordSalt);
-
-        // Create user entity
-        var user = new User
+        
+        try
         {
-            FullName = userDetails.FullName,
-            Email = userDetails.Email,
-            PasswordHash = passwordHash,
-            PasswordSalt = passwordSalt,
-        };
-
-        // Add user to the database
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
-
-        // For security reasons, do not return password hash and salt
-        return Ok(new { Message = "User registered successfully." });
+            var user = await _userService.CreateUserAsync(userDetails);
+            
+            // TODO: Generate token that is to be sent
+            return Ok(new { 
+                Message = "User registered successfully.",
+                // Token = token,
+                UserId = user.Id
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
 

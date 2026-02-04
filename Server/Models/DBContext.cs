@@ -18,6 +18,24 @@ public class MovieAppDbContext : DbContext
     {
         modelBuilder.HasDefaultSchema("app");
 
+        // Seed Roles FIRST (before other entities that reference them)
+        modelBuilder.Entity<Role>().HasData(
+            new Role
+            {
+                Id = RoleConstants.AdminRoleId,
+                RoleValue = RoleEnum.Admin,
+                Created = DateTimeOffset.UtcNow,
+                LastModified = DateTimeOffset.UtcNow
+            },
+            new Role
+            {
+                Id = RoleConstants.UserRoleId,
+                RoleValue = RoleEnum.User, 
+                Created = DateTimeOffset.UtcNow,
+                LastModified = DateTimeOffset.UtcNow
+            }
+        );
+
         // 1. MOVIE - REVIEWS (One-to-Many)
         modelBuilder.Entity<Review>()
             .HasOne(r => r.Movie)

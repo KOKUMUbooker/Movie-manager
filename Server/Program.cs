@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using MovieManager.Models;
-using MovieManager.Utils;
+using MovieManager.Services;
 
 namespace MovieManager;
 
 public class Program
 {
-    public static async Task Main(string[] args)
+    public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +15,7 @@ public class Program
 
         // Register services
         builder.Services.AddControllers();
+        builder.Services.AddTransient<IUserService, UserService>();
 
         builder.Services.AddDbContext<MovieAppDbContext>(options =>
         {
@@ -36,8 +37,6 @@ public class Program
             app.UseSwaggerUI();
         }
 
-        // SEED DATABASE
-        await app.SeedDatabaseAsync();
         app.MapControllers();
 
         app.Run();
