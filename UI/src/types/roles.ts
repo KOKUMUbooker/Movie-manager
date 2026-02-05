@@ -1,17 +1,15 @@
 export enum RoleEnum {
-  User=  'user' ,
-  Admin=   'admin'
+  Admin = 1,
+  User = 2,
 }
 
 export type Role = RoleEnum.Admin | RoleEnum.User
 
 export interface User {
-    id: number;
-    name: string;
-    email: string;
-    role: string;
-    status: string;
-    joinDate: string;
-    movies: number;
-    lastActive: string;
+  id: number;
+  name: string;
+  email: string;
+  role: RoleEnum;
+  joinDate: string;
+  movies: number;
 }
