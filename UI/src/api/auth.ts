@@ -2,7 +2,7 @@ import { API_BASE_URL } from "./urls";
 
 export const AUTH_CACHE_KEY = "auth" as const;
 
-interface SignUpData {
+export interface SignUpData {
     FullName: string;
     Email: string;
     Password: string
@@ -21,7 +21,7 @@ export async function signUp(data: SignUpData): Promise<{ message: string }> {
     return res.json();
 }
 
-interface LoginData {
+export interface LoginData {
     Email: string;
     Password: string
     ClientId: string;

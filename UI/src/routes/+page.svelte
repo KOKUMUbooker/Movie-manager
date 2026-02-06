@@ -6,11 +6,9 @@
 	import Autoplay from 'embla-carousel-autoplay';
 	import { dummyMovies } from '../data/movies';
 	import evilDead from '../lib/assets/evildead.jpg';
-	import frankenstein from '../lib/assets/frankenstein.jpg';
 	import hereditary from '../lib/assets/hereditary.jpg';
 	import it from '../lib/assets/it.jpg';
 	import rec from '../lib/assets/rec.jpg';
-	import smile from '../lib/assets/smile.jpg';
 	import Hero from '../lib/components/home/HeroSection.svelte';
 	import type { Movie } from '../types/movie';
 
@@ -21,7 +19,7 @@
 		recentAdditions: 0
 	};
 	let featuredMovies: Movie[] = [dummyMovies[4], dummyMovies[15], dummyMovies[7]];
-	const movieUrls = [hereditary, rec, evilDead, it, smile, frankenstein];
+	const movieUrls = [hereditary, rec, evilDead, it];
 </script>
 
 <svelte:head>

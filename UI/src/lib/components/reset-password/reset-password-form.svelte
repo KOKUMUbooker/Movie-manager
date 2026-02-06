@@ -4,38 +4,27 @@
 	import * as Field from '$lib/components/ui/field/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import type { HTMLAttributes } from 'svelte/elements';
-	// import { registerSchema } from '@/forms';
 	let { class: className, ...restProps }: HTMLAttributes<HTMLFormElement> = $props();
-	let FName = $state('');
-	let Email = $state('');
-	let Password = $state('');
-	let PasswordConfirm = $state('');
 
-	// let form = registerSchema.
+	let OldPassword = $state('');
+	let NewPassword = $state('');
+	let PasswordConfirm = $state('');
 </script>
 
 <form class={cn('flex flex-col gap-6', className)} {...restProps}>
 	<Field.Group>
 		<div class="flex flex-col items-center gap-1 text-center">
-			<h1 class="text-2xl font-bold">Create your account</h1>
-			<p class="text-sm text-balance text-muted-foreground">
-				Fill in the form below to create your account
-			</p>
+			<h1 class="text-2xl font-bold">Reset password</h1>
 		</div>
+
 		<Field.Field>
-			<Field.Label for="FullName">Full Name</Field.Label>
-			<Input id="FullName" type="text" bind:value={FName} placeholder="John Doe" required />
+			<Field.Label for="OldPassword">Old Password</Field.Label>
+			<Input id="OldPassword" bind:value={OldPassword} type="password" required />
+			<Field.Description>Must be at least 8 characters long.</Field.Description>
 		</Field.Field>
 		<Field.Field>
-			<Field.Label for="Email">Email</Field.Label>
-			<Input id="Email" type="email" bind:value={Email} placeholder="m@example.com" required />
-			<Field.Description>
-				We'll use this to contact you. We will not share your email with anyone else.
-			</Field.Description>
-		</Field.Field>
-		<Field.Field>
-			<Field.Label for="Password">Password</Field.Label>
-			<Input id="Password" bind:value={Password} type="password" required />
+			<Field.Label for="NewPassword">New Password</Field.Label>
+			<Input id="NewPassword" bind:value={NewPassword} type="password" required />
 			<Field.Description>Must be at least 8 characters long.</Field.Description>
 		</Field.Field>
 		<Field.Field>
@@ -44,11 +33,11 @@
 			<Field.Description>Please confirm your password.</Field.Description>
 		</Field.Field>
 		<Field.Field>
-			<Button type="submit">Create Account</Button>
+			<Button type="submit">Reset password</Button>
 		</Field.Field>
 		<Field.Field>
 			<Field.Description class="px-6 text-center">
-				Already have an account? <a href="/login">Log in</a>
+				<a href="/login">Back to log in</a>
 			</Field.Description>
 		</Field.Field>
 	</Field.Group>
