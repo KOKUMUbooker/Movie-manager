@@ -41,7 +41,9 @@ public class UserService : IUserService
             Email = userDto.Email,
             FullName = userDto.FullName,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password),
-            RoleId = finalRoleId
+            RoleId = finalRoleId,
+            EmailVerificationToken = GenerateVerificationToken(),
+            EmailVerificationTokenExpiry = DateTime.UtcNow.AddHours(24)
         };
         
         _dbContext.Users.Add(user);
@@ -144,5 +146,13 @@ public class UserService : IUserService
         await _dbContext.SaveChangesAsync();
 
         return true; // Indicate successful revocation
+    }
+
+    public string GenerateVerificationToken()
+    {
+        return Convert.ToBase64String(Guid.NewGuid().ToByteArray())
+            .Replace("+", "-")
+            .Replace("/", "_")
+            .Replace("=", "");
     }
 }

@@ -14,3 +14,8 @@ public class UserLoginDto
     [Required(ErrorMessage = "ClientId is required.")]
     public string ClientId { get; set; } = null!;
 }
+
+public class ResendVerificationDto
+{
+    public string Token { get; set; } = string.Empty;
+}

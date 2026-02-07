@@ -30,8 +30,11 @@ public class AuthController : ControllerBase
         try
         {
             var user = await _userService.CreateUserAsync(userDetails);
+
+            // Send verification email
+            // await _emailService.SendVerificationEmail(user.Email, user.EmailVerificationToken);
             
-            return Ok(new { message = "User registered successfully." });
+            return Ok(new { message = "User registered successfully." ,emailVerificationToken = user.EmailVerificationToken });
         }
         catch (Exception ex)
         {
@@ -82,5 +85,48 @@ public class AuthController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
+    }
+
+    [HttpPost("verify-email")]
+    public async Task<IActionResult> VerifyEmail([FromQuery] string token)
+    {
+        if (string.IsNullOrEmpty(token)) return BadRequest(new { message = "Token is required." });
+
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.EmailVerificationToken == token);
+        
+        if (user == null) return BadRequest(new { message = "Invalid verification token." });
+        
+        if (user.EmailVerificationTokenExpiry < DateTime.UtcNow)
+            return BadRequest(new { 
+                message = "Verification link has expired.",
+                code = "TOKEN_EXPIRED"
+            });
+        
+        user.EmailVerified = true;
+        user.EmailVerificationToken = null;
+        user.EmailVerificationTokenExpiry = null;
+        await _context.SaveChangesAsync();
+        
+        return Ok(new { message = "Email verified successfully." });
+    }
+
+    [HttpPost("resend-verification")]
+    public async Task<IActionResult> ResendVerification([FromBody] ResendVerificationDto dto)
+    {
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.EmailVerificationToken == dto.Token);
+        
+        if (user == null)
+            return BadRequest(new { message = "Invalid token." });
+        
+        // Generate new token
+        user.EmailVerificationToken = _userService.GenerateVerificationToken();
+        user.EmailVerificationTokenExpiry = DateTime.UtcNow.AddHours(24);
+        await _context.SaveChangesAsync();
+        
+        // Send email (implement your email service)
+        // await _emailService.SendVerificationEmail(user.Email, user.EmailVerificationToken);
+        
+        return Ok(new { message = "Verification email sent." });
     }
 }

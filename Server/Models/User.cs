@@ -15,14 +15,16 @@ public class User : EntityBase
     [Required]
     public Guid RoleId { get; set; }
 
-    public bool EmailVerified {get; set;} = false;
-
     [Required]
     public required string PasswordHash { get; set; }
 
+    // Number of movies added by the user
     public int Movies {get; set;} = 0;
 
-    
+    public bool EmailVerified { get; set; } = false;
+    public string? EmailVerificationToken { get; set; }
+    public DateTime? EmailVerificationTokenExpiry { get; set; }
+
     // Navigation properties
     public Role Role { get; set; } = null!;
     public List<Review> Reviews { get; set; } = new List<Review>();
