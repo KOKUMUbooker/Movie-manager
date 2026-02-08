@@ -8,11 +8,13 @@ public class HomeController : ControllerBase
 {
     private IEmailService _emailService;
     private IEmailTemplateService _templateService;
+    private IConfiguration _configuration;
 
-    public HomeController(IEmailService emailService,IEmailTemplateService templateService)
+    public HomeController(IEmailService emailService,IEmailTemplateService templateService,IConfiguration configuration)
     {
         _emailService = emailService;
         _templateService = templateService;
+        _configuration = configuration;
     }
 
     [HttpGet("/")]
@@ -26,19 +28,9 @@ public class HomeController : ControllerBase
     {
         try
         {
-            // string body = @"Hello there
-            // Heres some stuff
-            //     1. Food
-            //     2. Playlist
-            //     3. Video games
-            // Have a great day...
-            // ";
-
-            // await _emailService.SendEmail("bookerochieng20@gmail.com","Test Msg",body);
-            
-            // Generate HTML content
             var appName = "Movie-Manager";
             var userName = "Booker";
+            string recipientEmail = _configuration.GetValue("EmailConf:TestRecipient","test@example.com")!;
 
             var resetEmailUrl = "http://localhost:5173/reset-password";
             var verifymailUrl = "http://localhost:5173/verify-email?tkn=abcd";
@@ -47,7 +39,7 @@ public class HomeController : ControllerBase
                     ? await _templateService.GeneratePasswordResetEmail(appName, userName, resetEmailUrl)
                     : await _templateService.GenerateVerificationEmail(appName, userName, verifymailUrl);
 
-            await _emailService.SendEmail("bookerochieng20@gmail.com","Verify email",htmlBody);
+            await _emailService.SendEmail(recipientEmail,"Verify email",htmlBody);
 
             return Ok(new {message = "Email sent successfully."});
         }
