@@ -7,6 +7,10 @@ export interface SignUpData {
     Email: string;
     Password: string
 }
+export interface SignUpRes {
+    message :string;
+    emailVerificationToken: string;
+}
 export async function signUp(data: SignUpData): Promise<{ message: string }> {
     const res = await fetch(`${API_BASE_URL}/api/auth/sign-up`, {
         method: "POST",

@@ -1,11 +1,16 @@
 <script lang="ts">
-	import { cn } from '$lib/utils.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Field from '$lib/components/ui/field/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
-	import type { HTMLAttributes } from 'svelte/elements';
+	import { cn } from '$lib/utils.js';
 	import { registerBaseSchema, registerSchema } from '@/forms';
+	import { createMutation } from '@tanstack/svelte-query';
+	import { toast } from 'svelte-sonner';
+	import type { HTMLAttributes } from 'svelte/elements';
+	import { apiFetch, type SignUpData, type SignUpRes } from '../../../api';
+	import { API_BASE_URL } from '../../../api/urls';
 	import HelperText from '../common/HelperText.svelte';
+	import { goto } from '$app/navigation';
 
 	let { class: className, ...restProps }: HTMLAttributes<HTMLFormElement> = $props();
 	let formData = $state({
@@ -29,6 +34,20 @@
 		}
 	}
 
+	const {  isPending, error, data ,mutateAsync} = createMutation<
+		SignUpRes, // response type
+		Error, // error type
+		SignUpData // variables type
+	>(() => ({
+		mutationFn: (data) =>
+			apiFetch(`${API_BASE_URL}/api/auth/sign-up`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(data)
+			})
+	}));
+
+
 	function validatePasswords() {
 		const result = registerSchema.safeParse(formData);
 
@@ -48,7 +67,17 @@
 		validateField(field);
 	}
 
-	function onSubmit(event: SubmitEvent) {
+	function onError(_: HTMLElement, error: Error | null) {
+		return {
+  		  update(newError: Error) {
+			if (newError){
+				toast.error(newError.message,{richColors:true})
+			}
+		  }
+		};
+	}
+
+	async function onSubmit(event: SubmitEvent) {
 		event.preventDefault();
 
 		// mark everything touched
@@ -63,14 +92,13 @@
 			return;
 		}
 
-		// fully valid data
-		console.log('SUBMIT OK', result.data);
-
-		// continue: API call, navigation, etc.
+		const res =  await mutateAsync(formData);
+		toast.success(res.message,{richColors:true});
+		goto(`/verify-email?tkn=${res.emailVerificationToken}`);
 	}
 </script>
 
-<form onsubmit={onSubmit} class={cn('flex flex-col gap-6', className)} {...restProps}>
+<form use:onError={error} onsubmit={onSubmit} class={cn('flex flex-col gap-6', className)} {...restProps}>
 	<Field.Group>
 		<div class="flex flex-col items-center gap-1 text-center">
 			<h1 class="text-2xl font-bold">Create your account</h1>
@@ -138,7 +166,7 @@
 			></HelperText>
 		</Field.Field>
 		<Field.Field>
-			<Button type="submit">Create Account</Button>
+			<Button disabled={isPending} type="submit">{isPending ? "Submitting..." :"Create Account"}</Button>
 		</Field.Field>
 		<Field.Field>
 			<Field.Description class="px-6 text-center">
