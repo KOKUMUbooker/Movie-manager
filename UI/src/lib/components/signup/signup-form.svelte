@@ -34,7 +34,7 @@
 		}
 	}
 
-	const {  isPending, error, data ,mutateAsync} = createMutation<
+	const {  isPending, error, mutateAsync} = createMutation<
 		SignUpRes, // response type
 		Error, // error type
 		SignUpData // variables type

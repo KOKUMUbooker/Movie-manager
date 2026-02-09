@@ -5,13 +5,19 @@
 	import { Alert, AlertDescription } from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
 	import { Mail, RefreshCw } from '@lucide/svelte';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
+	import { apiFetch, type SignUpRes } from '../../api';
+	import { createMutation } from '@tanstack/svelte-query';
+	import { API_BASE_URL } from '../../api/urls';
+	import { toast } from 'svelte-sonner';
+	import { page } from '$app/stores';
 
 	let noTokenFoundMessage = false;
-	let token = '';
-	let isResending = false;
-	let isVerifyingEmail = false;
+	// let token = '';
+ 	let isVerifyingEmail = false;
 	let resendCooldown = 0;
+	let cooldownTimer: number | null = null;
+	$: token = $page.url.searchParams.get('tkn');
 
 	onMount(async () => {
 		const urlParams = new URLSearchParams(window.location.search);
@@ -21,16 +27,75 @@
 			noTokenFoundMessage = true;
 			return;
 		}
-
-		await verifyEmail(token);
 	});
 
-	async function verifyEmail(token: string) {}
+	onDestroy(() => {
+		if (cooldownTimer) {
+			clearInterval(cooldownTimer);
+		}
+	});
 
-	async function resendVerification() {}
+	function startCooldown(seconds: number) {
+		resendCooldown = seconds;
+
+		if (cooldownTimer) {
+			clearInterval(cooldownTimer);
+		}
+
+		cooldownTimer = window.setInterval(() => {
+			resendCooldown -= 1;
+
+			if (resendCooldown <= 0) {
+			resendCooldown = 0;
+			clearInterval(cooldownTimer!);
+			cooldownTimer = null;
+			}
+		}, 1000);
+	}
+	
+
+	const { isPending, error, mutateAsync } = createMutation<
+		SignUpRes, // response type
+		Error, // error type
+		{Token: string} // variables type
+	>(() => ({
+		mutationFn: (data) =>
+			apiFetch(`${API_BASE_URL}/api/auth/resend-verification`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(data)
+			})
+	}));
+
+	function onError(_: HTMLElement, error: Error | null) {
+		return {
+  		  update(newError: Error) {
+			console.log("Error : ",newError)
+			if (newError){
+				toast.error(newError.message,{richColors:true})
+			}
+		  }
+		};
+	}
+
+	// async function verifyEmail(token: string) {}
+
+	async function resendVerification() {
+		if (!token) {
+			toast.error("Verification token missing",{richColors:true});
+			return
+		}
+		const res = await mutateAsync({Token: token})
+		toast.success(res.message,{richColors: true})
+
+ 		startCooldown(60);
+
+    	goto(`/verify-email?tkn=${res.emailVerificationToken}`, { replaceState: true });
+	}
+
 </script>
 
-<div class="grid min-h-svh lg:grid-cols-2">
+<div  use:onError={error} class="grid min-h-svh lg:grid-cols-2">
 	<div class="flex flex-col gap-4 p-6 md:p-10">
 		<div class="flex flex-1 items-center justify-center">
 			<div class="w-full max-w-xs">
@@ -77,9 +142,9 @@
 					<Button
 						class="w-full"
 						onclick={resendVerification}
-						disabled={isResending || resendCooldown > 0}
+						disabled={isPending || resendCooldown > 0 || !token }
 					>
-						{#if isResending}
+						{#if isPending}
 							<RefreshCw class="mr-2 h-4 w-4 animate-spin" />
 							Sending...
 						{:else if resendCooldown > 0}
