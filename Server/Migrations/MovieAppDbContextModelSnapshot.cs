@@ -34,20 +34,16 @@ namespace MovieManager.Migrations
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("text");
 
                     b.Property<DateTimeOffset>("LastModified")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name");
 
                     b.ToTable("Cast", "app");
                 });
@@ -103,9 +99,9 @@ namespace MovieManager.Migrations
                             ClientId = "movie-manager-web",
                             ClientSecret = "bW92aWUtbWFuYWdlci1zZWNyZXQta2V5",
                             ClientURL = "https://localhost:5176",
-                            Created = new DateTimeOffset(new DateTime(2026, 2, 8, 18, 4, 8, 597, DateTimeKind.Unspecified).AddTicks(7098), new TimeSpan(0, 0, 0, 0, 0)),
+                            Created = new DateTimeOffset(new DateTime(2026, 2, 10, 15, 44, 49, 183, DateTimeKind.Unspecified).AddTicks(5553), new TimeSpan(0, 0, 0, 0, 0)),
                             IsActive = true,
-                            LastModified = new DateTimeOffset(new DateTime(2026, 2, 8, 18, 4, 8, 597, DateTimeKind.Unspecified).AddTicks(7098), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModified = new DateTimeOffset(new DateTime(2026, 2, 10, 15, 44, 49, 183, DateTimeKind.Unspecified).AddTicks(5553), new TimeSpan(0, 0, 0, 0, 0)),
                             Name = "Movie Manager Web Application"
                         });
                 });
@@ -122,8 +118,7 @@ namespace MovieManager.Migrations
 
                     b.Property<string>("AgeRating")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                        .HasColumnType("text");
 
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("timestamp with time zone");
@@ -133,8 +128,7 @@ namespace MovieManager.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Genre")
                         .IsRequired()
@@ -148,7 +142,6 @@ namespace MovieManager.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<double>("Rating")
-                        .HasPrecision(3, 1)
                         .HasColumnType("double precision");
 
                     b.Property<DateTimeOffset>("ReleaseDate")
@@ -156,60 +149,48 @@ namespace MovieManager.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("Verified")
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Rating");
-
-                    b.HasIndex("ReleaseDate");
-
-                    b.HasIndex("Title");
-
-                    b.HasIndex("Verified");
-
-                    b.ToTable("Movies", "app");
+                    b.ToTable("Movie", "app");
                 });
 
             modelBuilder.Entity("MovieManager.Models.MovieCast", b =>
                 {
-                    b.Property<Guid>("MovieId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("CastId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("CharacterName")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTimeOffset>("LastModified")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("Order")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
+                    b.Property<Guid>("MovieId")
+                        .HasColumnType("uuid");
 
-                    b.HasKey("MovieId", "CastId");
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("CastId");
 
-                    b.HasIndex("CharacterName");
-
                     b.HasIndex("MovieId");
 
-                    b.ToTable("MovieCasts", "app");
+                    b.ToTable("MovieCast", "app");
                 });
 
             modelBuilder.Entity("MovieManager.Models.RefreshToken", b =>
@@ -291,8 +272,7 @@ namespace MovieManager.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasMaxLength(5000)
-                        .HasColumnType("character varying(5000)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -303,10 +283,7 @@ namespace MovieManager.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("MovieId", "UserId")
-                        .IsUnique();
-
-                    b.ToTable("Reviews", "app");
+                    b.ToTable("Review", "app");
                 });
 
             modelBuilder.Entity("MovieManager.Models.Role", b =>
@@ -332,15 +309,15 @@ namespace MovieManager.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                            Created = new DateTimeOffset(new DateTime(2026, 2, 8, 18, 4, 8, 283, DateTimeKind.Unspecified).AddTicks(9402), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastModified = new DateTimeOffset(new DateTime(2026, 2, 8, 18, 4, 8, 283, DateTimeKind.Unspecified).AddTicks(9402), new TimeSpan(0, 0, 0, 0, 0)),
+                            Created = new DateTimeOffset(new DateTime(2026, 2, 10, 15, 44, 49, 50, DateTimeKind.Unspecified).AddTicks(4267), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModified = new DateTimeOffset(new DateTime(2026, 2, 10, 15, 44, 49, 50, DateTimeKind.Unspecified).AddTicks(4267), new TimeSpan(0, 0, 0, 0, 0)),
                             RoleValue = 1
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
-                            Created = new DateTimeOffset(new DateTime(2026, 2, 8, 18, 4, 8, 283, DateTimeKind.Unspecified).AddTicks(9402), new TimeSpan(0, 0, 0, 0, 0)),
-                            LastModified = new DateTimeOffset(new DateTime(2026, 2, 8, 18, 4, 8, 283, DateTimeKind.Unspecified).AddTicks(9402), new TimeSpan(0, 0, 0, 0, 0)),
+                            Created = new DateTimeOffset(new DateTime(2026, 2, 10, 15, 44, 49, 50, DateTimeKind.Unspecified).AddTicks(4267), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModified = new DateTimeOffset(new DateTime(2026, 2, 10, 15, 44, 49, 50, DateTimeKind.Unspecified).AddTicks(4267), new TimeSpan(0, 0, 0, 0, 0)),
                             RoleValue = 2
                         });
                 });
@@ -399,13 +376,13 @@ namespace MovieManager.Migrations
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                            Created = new DateTimeOffset(new DateTime(2026, 2, 8, 18, 4, 8, 283, DateTimeKind.Unspecified).AddTicks(9964), new TimeSpan(0, 0, 0, 0, 0)),
+                            Created = new DateTimeOffset(new DateTime(2026, 2, 10, 15, 44, 49, 50, DateTimeKind.Unspecified).AddTicks(4540), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "admin@system.com",
                             EmailVerified = false,
                             FullName = "System Administrator",
-                            LastModified = new DateTimeOffset(new DateTime(2026, 2, 8, 18, 4, 8, 283, DateTimeKind.Unspecified).AddTicks(9964), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModified = new DateTimeOffset(new DateTime(2026, 2, 10, 15, 44, 49, 50, DateTimeKind.Unspecified).AddTicks(4540), new TimeSpan(0, 0, 0, 0, 0)),
                             Movies = 0,
-                            PasswordHash = "$2a$11$kPNtl5qB5n3DZEvadBONm.hc8iaXG2x6xdv.JhJseF0Shi5.4lJXe",
+                            PasswordHash = "$2a$11$5NavXS8ZAnZlR8S.u/hKrOTx9xQB9ySTHoqhgU6Tz/7bZ/sc014pi",
                             RoleId = new Guid("00000000-0000-0000-0000-000000000001")
                         });
                 });
