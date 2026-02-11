@@ -58,13 +58,6 @@ GroupWatch is a **decision-making platform** that helps friends plan perfect mov
 - **Real-time**: SignalR
 - **APIs**: TMDB (movie data), JustWatch (streaming availability)
 
-## ** Design Philosophy**
-
-1. **Focus on the problem** - Decision-making, not video streaming
-2. **Mobile-first** - Plan movie nights on the go
-3. **Social by design** - Built for groups, not solo users
-4. **Fast & simple** - From debate to decision in 5 minutes
-
 ## ** Vision**
 
 **From fragmented chats to seamless movie nights.**
