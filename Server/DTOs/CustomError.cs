@@ -1,4 +1,4 @@
-namespace MovieManager.DTOs;
+namespace FlickPickApp.DTOs;
 
 public enum AuthErrorType
 {
@@ -11,5 +11,5 @@ public enum AuthErrorType
 
 public class CustomError {
     public string? Error {get; set;} = "ERROR";
-    public string Message {get; set;}
+    public required string Message {get; set;} = String.Empty;
 }

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace MovieManager.DTOs;
+namespace FlickPickApp.DTOs;
 
 public class UserLoginDto
 {
@@ -12,7 +12,7 @@ public class UserLoginDto
     public required string Password {get;set;}
 
     [Required(ErrorMessage = "ClientId is required.")]
-    public string ClientId { get; set; } = null!;
+    public required string ClientId { get; set; } = null!;
 }
 
 public class ResendVerificationDto
