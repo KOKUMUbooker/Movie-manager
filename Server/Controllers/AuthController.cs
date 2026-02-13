@@ -49,7 +49,7 @@ public class AuthController : ControllerBase
 
             await _emailService.SendEmail(user.Email,"Verify email",htmlBody);
             
-            return Ok(new { message = "User registered successfully." ,emailVerificationToken = user.EmailVerificationToken });
+            return Ok(new { Message = "User registered successfully." ,EmailVerificationToken = user.EmailVerificationToken });
         }
         catch (Exception ex)
         {
@@ -148,7 +148,7 @@ public class AuthController : ControllerBase
         var user = await _context.Users
             .FirstOrDefaultAsync(u => u.EmailVerificationToken == dto.Token);
         
-        if (user == null) return BadRequest(new CustomError{ Message = "Invalid token." });
+        if (user == null) return BadRequest(new CustomError{ Message = "Invalid token provided." });
         
         // Generate new token
         user.EmailVerificationToken = _userService.GenerateVerificationToken();
