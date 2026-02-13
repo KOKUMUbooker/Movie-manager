@@ -7,6 +7,7 @@ export interface SignUpData {
     Email: string;
     Password: string
 }
+
 export interface SignUpRes {
     message :string;
     emailVerificationToken: string;
@@ -31,8 +32,8 @@ export interface LoginData {
     ClientId: string;
 }
 interface LoginRes {
-    AccessToken: string;
-    AccessTokenExpiresAt: Date;
+    accessToken: string;
+    accessTokenExpiresAt: Date;
 }
 export async function logIn(data: LoginData): Promise<LoginRes> {
     const res = await fetch(`${API_BASE_URL}/api/auth/login`, {

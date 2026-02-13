@@ -1,16 +1,16 @@
 <!-- src/routes/verify-email/+page.svelte -->
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import mvImg from '$lib/assets/movie.jpg';
 	import { Alert, AlertDescription } from '$lib/components/ui/alert';
 	import { Button } from '$lib/components/ui/button';
 	import { Mail, RefreshCw } from '@lucide/svelte';
-	import { onDestroy, onMount } from 'svelte';
-	import { apiFetch, type SignUpRes } from '../../api';
 	import { createMutation } from '@tanstack/svelte-query';
-	import { API_BASE_URL } from '../../api/urls';
+	import { onDestroy, onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
-	import { page } from '$app/stores';
+	import { apiFetch, type SignUpRes } from '../../api';
+	import { API_BASE_URL } from '../../api/urls';
 
 	let noTokenFoundMessage = false;
  	let isVerifyingEmail = false;
@@ -64,9 +64,6 @@
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(data)
 			}),
-		onError: (error) => {
-			toast.error(error.message, { richColors: true });
-		}
 	}));
 
 	// async function verifyEmail(token: string) {}
