@@ -93,7 +93,9 @@ public class AuthController : ControllerBase
             result.Data.AccessTokenExpiresAt
         );
 
-        return Ok(result.Data);
+        return Ok(new {
+            
+        });
     }
 
     // Endpoint to obtain a new access token using a refresh token

@@ -2,7 +2,7 @@
 
 set -e
 
-echo "🛢️🛢️ Deleting Database 🤤🤤"
+echo "🛢️🛢️  Deleting Database 🤤🤤"
 docker exec -it postgres psql -U admin -d flickpick -c "DROP SCHEMA app CASCADE;"
 
 echo "🛑🛑 Stopping the postgres docker container 🛑🛑"
