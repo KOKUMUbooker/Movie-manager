@@ -66,6 +66,11 @@ public class AuthController : ControllerBase
 
         var result = await _userService.AuthenticateUserAsync(loginDto, ipAddress);
 
+        if (result.EmailVerificationToken != null) // Send details for the email verification so that UI can use it 
+        {
+            return Ok(result.Data);
+        }
+
         if (result.ErrorType != AuthErrorType.None)
         {
             return result.ErrorType switch
@@ -73,15 +78,18 @@ public class AuthController : ControllerBase
                 AuthErrorType.InvalidCredentials => Unauthorized(
                     new CustomError { Error = "INVALID_CREDENTIALS", Message = result.ErrorMessage }),
 
-                AuthErrorType.EmailNotVerified => StatusCode(403,
-                    new CustomError { Error = "EMAIL_NOT_VERIFIED", Message = result.ErrorMessage }),
-
                 AuthErrorType.InvalidClient => Unauthorized(
                     new CustomError { Error = "INVALID_CLIENT", Message = result.ErrorMessage }),
 
                 _ => BadRequest(new CustomError { Message = "Authentication failed." })
             };
         }
+
+        // Set refresh token in HTTP-only cookie
+        SetRefreshTokenCookie(
+            result.Data.RefreshToken,
+            result.Data.AccessTokenExpiresAt
+        );
 
         return Ok(result.Data);
     }
@@ -146,7 +154,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> ResendVerification([FromBody] ResendVerificationDto dto)
     {
         var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.EmailVerificationToken == dto.Token);
+            .FirstOrDefaultAsync(u => u.EmailVerificationToken == dto.EmailVerificationToken);
         
         if (user == null) return BadRequest(new CustomError{ Message = "Invalid token provided." });
         
@@ -224,4 +232,16 @@ public class AuthController : ControllerBase
         return Ok(new { Message = "Password reset successfully." });
     }
 
+    private void SetRefreshTokenCookie(string refreshToken, DateTime expiresAt)
+    {
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,               // MUST be true in production
+            SameSite = SameSiteMode.Strict, // or Lax depending on frontend
+            Expires = expiresAt
+        };
+
+        Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
+    }
 }

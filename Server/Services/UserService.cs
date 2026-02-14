@@ -98,7 +98,8 @@ public class UserService : IUserService
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken.Token,
-                AccessTokenExpiresAt = DateTime.UtcNow.AddMinutes(15)
+                AccessTokenExpiresAt = DateTime.UtcNow.AddMinutes(15),
+                EmailVerificationToken = user.EmailVerificationToken
             }
         };
     }

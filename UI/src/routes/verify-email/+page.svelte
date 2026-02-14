@@ -12,7 +12,7 @@
 	import { apiFetch, type SignUpRes } from '../../api';
 	import { API_BASE_URL } from '../../api/urls';
 
-	let noTokenFoundMessage = false;
+	let noTokenFound = false;
  	let isVerifyingEmail = false;
 	let resendCooldown = 0;
 	let cooldownTimer: number | null = null;
@@ -23,7 +23,7 @@
 		token = urlParams.get('tkn') || '';
 
 		if (!token) {
-			noTokenFoundMessage = true;
+			noTokenFound = true;
 			return;
 		}
 	});
@@ -53,10 +53,10 @@
 	}
 	
 
-	let { isPending, mutateAsync } = createMutation<
+	let resendVerificationMutation = createMutation<
 		SignUpRes, // response type
 		Error, // error type
-		{Token: string} // variables type
+		{EmailVerificationToken: string} // variables type
 	>(() => ({
 		mutationFn: (data) =>
 			apiFetch(`${API_BASE_URL}/api/auth/resend-verification`, {
@@ -73,8 +73,8 @@
 			toast.error("Verification token missing",{richColors:true});
 			return
 		}
-		const res = await mutateAsync({Token: token})
-		toast.success(res.message,{richColors: true})
+		const res = await resendVerificationMutation.mutateAsync({EmailVerificationToken: token})
+		toast.success(res.message, {richColors: true})
 
  		startCooldown(60);
 
@@ -107,7 +107,7 @@
 					</p>
 				</div>
 
-				{#if noTokenFoundMessage}
+				{#if noTokenFound}
 					<Alert variant={'destructive'} class="mb-6">
 						<AlertDescription class="text-center">
 							Verification link is invalid or missing.
@@ -130,9 +130,9 @@
 					<Button
 						class="w-full"
 						onclick={resendVerification}
-						disabled={isPending || resendCooldown > 0 || !token }
+						disabled={resendVerificationMutation.isPending || resendCooldown > 0 || !token }
 					>
-						{#if isPending}
+						{#if resendVerificationMutation.isPending}
 							<RefreshCw class="mr-2 h-4 w-4 animate-spin" />
 							Sending...
 						{:else if resendCooldown > 0}

@@ -8,16 +8,21 @@
 		Label
 	} from '$lib/components/ui/field/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
-	import { cn, wait, type WithElementRef } from '$lib/utils.js';
+	import { cn, type WithElementRef } from '$lib/utils.js';
 	import { loginSchema } from '@/forms';
 	import { createMutation } from '@tanstack/svelte-query';
 	import type { HTMLFormAttributes } from 'svelte/elements';
-	import { apiFetch, type LoginData } from '../../../api';
+	import { apiFetch, type LoginData, type LoginRes } from '../../../api';
+	import { API_BASE_URL } from '../../../api/urls';
 	import { CLIENT_ID } from '../../../constants';
 	import HelperText from '../common/HelperText.svelte';
-	import { API_BASE_URL } from '../../../api/urls';
-	import { toast } from 'svelte-sonner';
 	import Spinner from '../ui/spinner/spinner.svelte';
+	import { page } from '$app/state';
+	import { goto } from '$app/navigation';
+
+    const searchParams = page.url.searchParams;
+
+    const paramEmail = searchParams.get('email') || '';
 
 	let {
 		ref = $bindable(null),
@@ -25,28 +30,24 @@
 		...restProps
 	}: WithElementRef<HTMLFormAttributes> = $props();
 	let formData = $state({
-		Email: '',
+		Email: paramEmail,
 		Password: ''
 	});
 	let errors: Record<string, string> = $state({});
 	let touched: Record<string, boolean> = $state({});
 
 	let loginMutation = createMutation<
-		unknown, // response type
+		LoginRes, // response type
 		Error, // error type
 		LoginData // variables type
 	>(() => ({
 		mutationFn: async (data) =>
 		{
-			await wait(10);
 			return apiFetch(`${API_BASE_URL}/api/auth/login`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(data)
 			})
-		},
-		onError: (error) => {
-			toast.error(error.message, { richColors: true });
 		}
 	}));
  
@@ -81,7 +82,13 @@
 			return;
 		}
 
-		await loginMutation.mutateAsync({ ...formData, ClientId: CLIENT_ID });
+		const res = await loginMutation.mutateAsync({ ...formData, ClientId: CLIENT_ID });
+		if (res.emailVerificationToken) {
+			goto(`/verify-email?tkn=${res.emailVerificationToken}`);
+			return;
+		}
+
+		goto('/dashboard')
 	}
 
 	const id = $props.id();

@@ -31,9 +31,10 @@ export interface LoginData {
     Password: string
     ClientId: string;
 }
-interface LoginRes {
+export interface LoginRes {
     accessToken: string;
-    accessTokenExpiresAt: Date;
+    accessTokenExpiresAt: string;
+    emailVerificationToken: string
 }
 export async function logIn(data: LoginData): Promise<LoginRes> {
     const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
