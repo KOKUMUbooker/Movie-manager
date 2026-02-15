@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using FlickPickApp.DTOs;
 using FlickPickApp.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace FlickPickApp.Services;
 
@@ -86,11 +87,8 @@ public class UserService : IUserService
             };
         }
 
-        Console.WriteLine("Starting to genrate ACC Token ======================================================");
         var accessToken = _tokenService.GenerateAccessToken(user, user.Role.RoleValue, out string jwtId, client);
-        Console.WriteLine("++++++++++++++ Access token : ",accessToken);
         var refreshToken = _tokenService.GenerateRefreshToken(ipAddress, jwtId, client, user.Id);
-        Console.WriteLine("############# Refresh token : ",refreshToken);
 
         _dbContext.RefreshTokens.Add(refreshToken);
         await _dbContext.SaveChangesAsync();
@@ -102,7 +100,12 @@ public class UserService : IUserService
                 AccessToken = accessToken,
                 RefreshToken = refreshToken.Token,
                 AccessTokenExpiresAt = DateTime.UtcNow.AddMinutes(15),
-                EmailVerificationToken = user.EmailVerificationToken
+                EmailVerificationToken = user.EmailVerificationToken,
+                UserDetails = new UIAuthState { 
+                    Id = user.Id.ToString(), 
+                    Email = user.Email,
+                    Role = ((int)user.Role.RoleValue).ToString() // To get the numeric value & not the key
+                }
             }
         };
     }

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using FlickPickApp.Services;
 using System.Security.Cryptography;
 using System.Text;
+using System.Data.Common;
 
 namespace FlickPickApp.Controllers;
 
@@ -93,9 +94,7 @@ public class AuthController : ControllerBase
             result.Data.AccessTokenExpiresAt
         );
 
-        return Ok(new {
-            
-        });
+        return Ok(result.Data.UserDetails);
     }
 
     // Endpoint to obtain a new access token using a refresh token

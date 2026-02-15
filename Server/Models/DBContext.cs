@@ -100,7 +100,7 @@ public class MovieAppDbContext : DbContext
         // Generate a client secret (in production, use a secure random generator)
         var clientId = "movie-manager-web";
         
-        var clientSecret = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("flick-pick-movie-manager-appsecr"));
+        var clientSecret = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("MySuperSecureAndRandomKeyThatLooksJustAwesomeAndNeedsToBeVeryVeryLong!!!111oneeleven"));
 
         modelBuilder.Entity<Client>().HasData(
             new Client
